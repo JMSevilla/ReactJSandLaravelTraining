@@ -2,7 +2,7 @@ import React from 'react'
 import { TextField } from '@mui/material'
 
 const BasicTextField = (props) => {
-    const { type, style, onHandleChange, placeholder } = props
+    const { type, style, onHandleChange, placeholder, value } = props
 
     return (
         <>
@@ -12,6 +12,7 @@ const BasicTextField = (props) => {
             onChange={onHandleChange}
             placeholder={placeholder}
             variant={'outlined'}
+            value={value}
             ></TextField>
         </>
     )

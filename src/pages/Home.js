@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useContext, useCallback} from 'react'
 import ButtonAppBar from '../components/Appbar/Appbar'
 import { Container, CardContent, Typography,
 Grid, CardActions } from '@mui/material'
@@ -7,10 +7,14 @@ import BasicTextField from '../components/TextField/TextField'
 import SimpleButton from '../components/Button/Button'
 import { useHistory } from 'react-router-dom'
 import { appRouter } from '../router/approuter'
+import { Context } from '../context/FieldContext'
+
 
 
 const HomePage = () => {
     const history = useHistory()
+    const contextValues = useContext(Context)
+    const { handleFirstname, handleLastname, allFieldSelected, selectedIndex } = contextValues
     const objectUser = { 
         firstname : '',
         lastname : ''
@@ -25,41 +29,7 @@ const HomePage = () => {
         float : 'right', marginTop: '10px', marginBottom: '10px'
     }
     
-    const handleFirstname = event => {
-        let value = event.currentTarget.value
-        if(!value) {
-            setState(prevState => {
-                let objectUser = Object.assign({}, prevState.objectUser)
-                objectUser.firstname = ""
-                return { objectUser }
-            })
-            return false //1 item
-        } else {
-            setState(prevState => {
-                let objectUser = Object.assign({}, prevState.objectUser)
-                objectUser.firstname = value
-                return { objectUser }
-            })
-        }
-    }
-    const handleLastname = event => {
-        let value = event.currentTarget.value
-        if(!value) {
-            setState(prevState => {
-                let objectUser = Object.assign({}, prevState.objectUser)
-                objectUser.lastname = ""
-                return { objectUser }
-            })
-            return false
-        } else {
-            setState(prevState => {
-                let objectUser = Object.assign({}, prevState.objectUser)
-                objectUser.lastname = value
-                return { objectUser }
-            })
-          
-        }
-    }
+
     const onSubmit = () => {
         history.push(appRouter.About.path)
         // if(!state.objectUser.firstname) {
@@ -72,6 +42,18 @@ const HomePage = () => {
         //     //client request
         // }
     }
+
+    const onSubmission = useCallback((params) => {
+        alert(params)
+    }, [])
+
+    const renderHelloworld = () => {
+        return(
+            <>
+                <h5>Hello world</h5>
+            </>
+        )
+    }
     return (
         <>
             <ButtonAppBar title={'Navigation Bar'} />
@@ -79,7 +61,7 @@ const HomePage = () => {
                 <BasicCard children={
                     <CardContent>
                        <Typography gutterBottom>
-                        User Form
+                        User Form 
                         </Typography>
 
                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -87,16 +69,18 @@ const HomePage = () => {
                                 <BasicTextField 
                                 type={'text'}
                                 style={customStyle}
-                                onHandleChange={handleFirstname}
+                                onHandleChange={(e) => handleFirstname(e)}
                                 placeholder={'Enter firstname'}
+                                value={allFieldSelected[selectedIndex].fieldSettings.userObject.firstname}
                                 />
                             </Grid>
                             <Grid item xs={6}>
                             <BasicTextField 
                                 type={'text'}
                                 style={customStyle}
-                                onHandleChange={handleLastname}
+                                onHandleChange={(e) => handleLastname(e)}
                                 placeholder={'Enter lastname'}
+                                value={allFieldSelected[selectedIndex].fieldSettings.userObject.lastname}
                                 />
                             </Grid>
                         </Grid>
@@ -104,7 +88,7 @@ const HomePage = () => {
                             buttonName={'Submit'}
                             variant={'outlined'}
                             style={customStyleButton}
-                            onHandleClick={onSubmit}
+                            onHandleClick={() => onSubmission("hello world")}
                         />
                     </CardContent>
                 }/>
